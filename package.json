@@ -1,5 +1,5 @@
 {
-  "name": "commitect",
+  "name": "@commitect/commitect",
   "version": "1.0.0",
   "description": "Zero-config Git Commit Assistant CLI",
   "main": "dist/index.js",
