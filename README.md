@@ -11,6 +11,13 @@
 ✅ **History Tracking** - Review all your cached messages  
 ✅ **Simple** - Just 5 commands
 
+## Screenshots
+
+![CommiTect Command](./public/commitect.png)
+![Analyze & Copy Commands](./public/analyze_copy.png)
+![History Command](./public/history.png)
+![Commit Command](./public/commit.png)
+
 ## Installation
 
 ```bash

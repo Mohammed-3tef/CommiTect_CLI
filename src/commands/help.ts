@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 
-const VERSION = '1.0.0';
+const VERSION = '1.0.1';
 const GITHUB_REPO = 'https://github.com/Mohammed_3tef/CommiTect_CLI';
 const ISSUES_URL = GITHUB_REPO + '/issues';
 
