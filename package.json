@@ -1,6 +1,6 @@
 {
   "name": "commitect",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Zero-config Git Commit Assistant CLI",
   "main": "dist/index.js",
   "type": "module",
