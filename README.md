@@ -13,10 +13,10 @@
 
 ## Screenshots
 
-![CommiTect Command](./public/commitect.png)
-![Analyze & Copy Commands](./public/analyze_copy.png)
-![History Command](./public/history.png)
-![Commit Command](./public/commit.png)
+![CommiTect Command](https://raw.githubusercontent.com/Mohammed-3tef/CommiTect_CLI/refs/heads/main/public/commitect.png)
+![Analyze & Copy Commands](https://raw.githubusercontent.com/Mohammed-3tef/CommiTect_CLI/refs/heads/main/public/analyze_copy.png)
+![History Command](https://raw.githubusercontent.com/Mohammed-3tef/CommiTect_CLI/refs/heads/main/public/history.png)
+![Commit Command](https://raw.githubusercontent.com/Mohammed-3tef/CommiTect_CLI/refs/heads/main/public/commit.png)
 
 ## Installation
 

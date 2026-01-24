@@ -1,6 +1,6 @@
 {
   "name": "commitect",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Zero-config Git Commit Assistant CLI",
   "main": "dist/index.js",
   "type": "module",
@@ -19,7 +19,7 @@
     "ai",
     "assistant"
   ],
-  "author": "",
+  "author": "Mohammed Atef",
   "license": "MIT",
   "dependencies": {
     "commander": "^11.1.0",
