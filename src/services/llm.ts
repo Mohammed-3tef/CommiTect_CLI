@@ -1,4 +1,5 @@
 import axios, { AxiosError } from 'axios';
+import crypto from 'crypto';
 import { commitCache } from '../utils/cache.js';
 
 export interface CommitSuggestion {
@@ -9,11 +10,14 @@ export interface CommitSuggestion {
 const API_ENDPOINT = 'http://commitintentdetector.runasp.net/api/Commit/analyze';
 
 export async function generateCommitMessage(diff: string): Promise<CommitSuggestion> {
+  const diffHash = crypto.createHash('sha1').update(diff).digest('hex');
+
   // Check cache first
-  const cached = commitCache.get(diff);
+  const cached = commitCache.get(diffHash);
   if (cached) {
     return cached;
   }
+
   const maxRetries = 3;
   let lastError: Error | null = null;
 
@@ -26,7 +30,7 @@ export async function generateCommitMessage(diff: string): Promise<CommitSuggest
           headers: {
             'Content-Type': 'application/json'
           },
-          timeout: 30000 // 30 second timeout
+          timeout: 10000
         }
       );
 
@@ -40,7 +44,7 @@ export async function generateCommitMessage(diff: string): Promise<CommitSuggest
       const result = parseResponse(data.intent);
       
       // Cache the result
-      commitCache.set(diff, result.intent, result.message);
+      commitCache.set(diffHash, result.intent, result.message);
 
       return result;
 
@@ -53,16 +57,16 @@ export async function generateCommitMessage(diff: string): Promise<CommitSuggest
         // Handle rate limiting (429)
         if (axiosError.response?.status === 429) {
           if (attempt < maxRetries) {
-            await sleep(1000 * attempt); // Exponential backoff
+            await sleep(500 * Math.pow(2, attempt));
             continue;
           }
-          throw new Error('API rate limit reached. Please try again later.');
+          break;
         }
 
         // Handle server errors (5xx) - retry
         if (axiosError.response?.status && axiosError.response.status >= 500) {
           if (attempt < maxRetries) {
-            await sleep(1000 * attempt);
+            await sleep(500 * Math.pow(2, attempt));
             continue;
           }
         }
@@ -70,10 +74,9 @@ export async function generateCommitMessage(diff: string): Promise<CommitSuggest
         // Handle network errors - retry
         if (axiosError.code === 'ECONNREFUSED' || axiosError.code === 'ETIMEDOUT') {
           if (attempt < maxRetries) {
-            await sleep(1000 * attempt);
+            await sleep(500 * Math.pow(2, attempt));
             continue;
           }
-          throw new Error('Unable to connect to API. Please check your network connection.');
         }
       }
 
@@ -84,13 +87,14 @@ export async function generateCommitMessage(diff: string): Promise<CommitSuggest
 
       // Retry on other errors
       if (attempt < maxRetries) {
-        await sleep(1000 * attempt);
+        await sleep(500 * Math.pow(2, attempt));
         continue;
       }
     }
   }
 
-  throw new Error('Failed to generate commit message. Please check your API configuration.');
+  console.warn('⚠  AI service unavailable, using fallback commit message.');
+  return generateFallbackCommit(diff);
 }
 
 function parseResponse(response: string): CommitSuggestion {
@@ -115,6 +119,42 @@ function parseResponse(response: string): CommitSuggestion {
     message = message.substring(0, 67) + '...';
   }
 
+  return { intent, message };
+}
+
+function generateFallbackCommit(diff: string): CommitSuggestion {
+  const diffHash = crypto.createHash('sha1').update(diff).digest('hex');
+  const lowerDiff = diff.toLowerCase();
+
+  let intent: CommitSuggestion['intent'];
+  let message: string;
+
+  if (/(fix|bug|error|issue|crash|fault)/i.test(lowerDiff)) {
+    intent = 'Bug Fix';
+    message = 'fix reported issue';
+  } 
+  else if (/(add|create|implement|introduce|new)/i.test(lowerDiff)) {
+    intent = 'Feature';
+    message = 'add new functionality';
+  } 
+  else if (/(refactor|cleanup|restructure|optimize)/i.test(lowerDiff)) {
+    intent = 'Refactor';
+    message = 'refactor code structure';
+  } 
+  else if (/(doc|readme|comment)/i.test(lowerDiff)) {
+    intent = 'Docs';
+    message = 'update documentation';
+  } 
+  else if (/(test|spec|coverage)/i.test(lowerDiff)) {
+    intent = 'Test';
+    message = 'update tests';
+  } 
+  else {
+    intent = 'Chore';
+    message = 'update project files';
+  }
+
+  commitCache.set(diffHash, intent, message);
   return { intent, message };
 }
 

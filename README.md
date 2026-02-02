@@ -21,7 +21,7 @@
 ## Installation
 
 ```bash
-npm install -g commitect
+npm install commitect
 ```
 
 ## Usage
@@ -49,7 +49,7 @@ commitect copy
 
 **Output:**
 ```
-✔ Commit message copied to clipboard
+✓ Commit message copied to clipboard
 ```
 
 ### Auto-Commit
@@ -62,7 +62,7 @@ commitect commit
 
 **Output:**
 ```
-✔ Committed: Feature: Add user authentication with JWT tokens
+✓ Committed: Feature: Add user authentication with JWT tokens
 ```
 
 ### View History
@@ -100,7 +100,7 @@ commitect clear-cache
 
 **Output:**
 ```
-✔ Cache cleared (15 entries removed)
+✓ Cache cleared (15 entries removed)
 ```
 
 ## How It Works

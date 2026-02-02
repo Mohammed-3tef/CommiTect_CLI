@@ -12,7 +12,7 @@ const program = new Command();
 program
   .name('commitect')
   .description('Zero-config Git Commit Assistant')
-  .version('1.0.0');
+  .version('1.0.3');
 
 program
   .command('analyze')

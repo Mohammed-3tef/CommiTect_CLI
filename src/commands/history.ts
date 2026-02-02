@@ -33,9 +33,9 @@ export function historyCommand(): void {
 
   } catch (error) {
     if (error instanceof Error) {
-      console.error(chalk.red('❌ ' + error.message));
+      console.error(chalk.red('✗  ' + error.message));
     } else {
-      console.error(chalk.red('❌ Failed to load history'));
+      console.error(chalk.red('✗  Failed to load history'));
     }
     process.exit(1);
   }
